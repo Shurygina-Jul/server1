@@ -8,6 +8,7 @@ app = Flask(__name__)
 messages = [
     {"username": "Jack", "text": "Hello everyone!", "timelamp": time.time()},
      {"username": "Jack2", "text": "Hello Jack!", "timelamp": time.time()}]
+users = {'Jack':'12345', 'Jack2': '12345'}
 
 @app.route("/")
 def hello():
@@ -23,15 +24,26 @@ def status():
 
 @app.route("/send_message")
 def send_message():
-    print(request.json)
-    username = "Jack"
-    text = "Hello"
+    username = request.json['username']
+    password = request.json['password']
+    text = request.json['text']
+    if username in users:
+        if users[username]!= password:
+            return {'ok': False}
+    else:
+        users[username] = password
     messages.append({"username": username, "text": text, "timelamp": time.time()})
+
     return {'ok': True}
 
 @app.route("/get_messages")
 def get_messages():
-    return {'messages': messages}
+    after = float(request.args['after'])
+    result = []
+    for message in messages:
+        if message['timelamp'] >after:
+            result.append(message)
+    return {'messages': result}
 
 
 
