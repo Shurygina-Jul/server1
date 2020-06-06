@@ -20,7 +20,9 @@ def status():
               'name': 'messenger',
               'server_start_time': server_start,
               'server_current_time': datetime.now(),
-              'current_time_second': time.time()}
+              'current_time_second': time.time(),
+              'users_count': len(users),
+              'messages_count': len(messages)}
 
 @app.route("/send_message")
 def send_message():
